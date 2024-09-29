@@ -5,6 +5,12 @@ const app: Application = express();
 const PORT = process.env.PORT || 7000;
 import Routes from './routes/index.js'
 
+//-------------------------------------------//
+// these are the redis import
+
+import redis from "./config/redis.config.js"
+import { createAdapter } from "@socket.io/redis-streams-adapter";
+
 // -----------------------------------------------------------------------------//
 // here we are import the socket io thing for setup
 import {Server} from 'socket.io'
@@ -16,7 +22,8 @@ const server = createServer(app)
 const io = new Server(server , {
   cors : {
     origin: "*"
-  }
+  },
+  adapter: createAdapter(redis)
 })
 
 setupSocket(io)
