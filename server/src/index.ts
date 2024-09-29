@@ -16,15 +16,24 @@ import { createAdapter } from "@socket.io/redis-streams-adapter";
 import {Server} from 'socket.io'
 import {createServer} from 'http'
 import { setupSocket } from "./socket.js";
+import { instrument } from "@socket.io/admin-ui";
 const server = createServer(app)
 
 // here we creating the instance of the socket io server
 const io = new Server(server , {
   cors : {
-    origin: "*"
+    origin: ["http://localhost:3000" , "https://admin.socket.io"],
+    credentials:true,
   },
+  
   adapter: createAdapter(redis)
 })
+
+// socket.io admin panel
+instrument(io, {
+  auth: false,
+  mode:"development",
+});
 
 setupSocket(io)
 export {io}
